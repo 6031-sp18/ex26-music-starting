@@ -42,7 +42,7 @@ public class MidiSequencePlayer implements SequencePlayer {
     private final Synthesizer synthesizer;
 
     // active MIDI channels, assigned to instruments
-    private final Map<Instrument, Integer> channels = new HashMap<>();
+    private final Map<Instrument, Integer> channelForInstrument = new HashMap<>();
 
     // next available channel number (not assigned to an instrument yet)
     private int nextChannel = 0;
@@ -71,7 +71,7 @@ public class MidiSequencePlayer implements SequencePlayer {
         assert ticksPerBeat >= 0 : "should be positive number of ticks per beat";
         assert callbacks != null : "callbacks should be non-null";
         assert callbacks.keySet().stream().allMatch(n -> n >= 1) : "callback numbers should be positive";
-        assert ! channels.values().contains(nextChannel) : "nextChannel should not be assigned";
+        assert ! channelForInstrument.values().contains(nextChannel) : "nextChannel should not be assigned";
     }
 
     /**
@@ -218,13 +218,13 @@ public class MidiSequencePlayer implements SequencePlayer {
      */
     private int getChannel(Instrument instr) {
         // check whether this instrument already has a channel
-        if (channels.containsKey(instr)) {
-            return channels.get(instr);
+        if (channelForInstrument.containsKey(instr)) {
+            return channelForInstrument.get(instr);
         }
         
         int channel = allocateChannel();
         patchInstrumentIntoChannel(channel, instr);
-        channels.put(instr, channel);
+        channelForInstrument.put(instr, channel);
         checkRep();
         return channel;
     }
