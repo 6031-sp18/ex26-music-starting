@@ -36,12 +36,10 @@ public class Rest implements Music {
         return;
     }
 
-    private static final int BITS_PER_INT = 32;
-    
     @Override
     public int hashCode() {
         long durationBits = Double.doubleToLongBits(duration);
-        return (int) (durationBits ^ (durationBits >>> BITS_PER_INT));
+        return (int) (durationBits ^ (durationBits >>> Integer.SIZE));
     }
 
     @Override

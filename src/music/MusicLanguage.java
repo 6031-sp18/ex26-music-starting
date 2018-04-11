@@ -64,17 +64,15 @@ public class MusicLanguage {
 
     /* Parse a symbol into a Note or a Rest. */
     private static Music parseSymbol(String symbol, Instrument instr) {
-        Matcher m = Pattern.compile("([^/0-9]*)([0-9]+)?(/[0-9]+)?").matcher(symbol);
-        final int numeratorGroup = 2;
-        final int denominatorGroup = 3;
+        Matcher m = Pattern.compile("(?<pitch>[^/0-9]*)(?<numerator>[0-9]+)?(?<denominator>/[0-9]+)?").matcher(symbol);
         
         if (!m.matches()) throw new IllegalArgumentException("couldn't understand " + symbol);
 
-        String pitchSymbol = m.group(1);
+        String pitchSymbol = m.group("pitch");
 
         double duration = 1.0;
-        if (m.group(numeratorGroup) != null) duration *= Integer.valueOf(m.group(numeratorGroup));
-        if (m.group(denominatorGroup) != null) duration /= Integer.valueOf(m.group(denominatorGroup).substring(1));
+        if (m.group("numerator") != null) duration *= Integer.valueOf(m.group("numerator"));
+        if (m.group("denominator") != null) duration /= Integer.valueOf(m.group("denominator").substring(1));
 
         if (pitchSymbol.equals(".")) return rest(duration);
         else return note(duration, parsePitch(pitchSymbol), instr);

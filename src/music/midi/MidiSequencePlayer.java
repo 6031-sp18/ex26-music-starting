@@ -2,6 +2,7 @@ package music.midi;
 
 import java.math.BigInteger;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -199,8 +200,7 @@ public class MidiSequencePlayer implements SequencePlayer {
                 }
             } else if (meta.getType() == META_END_OF_TRACK) {
                 // allow the sequencer to finish
-                final int millisecondsToWait = 1000;
-                try { Thread.sleep(millisecondsToWait); } catch (InterruptedException ie) { }
+                try { Thread.sleep(Duration.ofSeconds(1).toMillis()); } catch (InterruptedException ie) { }
                 // stop & close the sequencer
                 sequencer.stop();
                 sequencer.close();
